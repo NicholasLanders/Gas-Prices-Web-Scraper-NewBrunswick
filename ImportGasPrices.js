@@ -1,5 +1,5 @@
 function main() {
-    let newVal = scrapeGasPrices("https://nsuarb.novascotia.ca/mandates/gasoline-diesel-pricing/gasoline-prices-zone-map");
+    let newVal = scrapeGasPrices("https://nbeub.ca/index.php?page=current-petroleum-prices-2");
     updateSheet(newVal);
   }
   
@@ -8,8 +8,11 @@ function main() {
     let html = UrlFetchApp.fetch(url).getContentText();
     let $ = Cheerio.load(html);
   
-    // Halifax is in zone 1
-    newVal.gasPrice = $(".field--name-field-zone-1-unleaded-min").text();
+
+    newVal.gasPrice = $("#gasprices_inner h1").text();
+    newVal.gasPrice = parseFloat(newVal.gasPrice);
+    newVal.gasPrice = newVal.gasPrice.toFixed(1);
+    
     newVal.gasLastUpdated = "The last update was: " + $(".datetime").text();
     newVal.timeStamp = Utilities.formatDate(new Date(), 'Etc/GMT', "yyyy-MM-dd HH:mm:ss");
     
